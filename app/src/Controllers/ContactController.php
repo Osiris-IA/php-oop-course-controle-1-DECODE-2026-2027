@@ -70,7 +70,7 @@ class ContactController extends AbstractController
             "dateOfLastUpdate" => $now
         ];
 
-        if(!is_dir(self::SAVE_CONTACT_PATH)) {
+        if (!is_dir(self::SAVE_CONTACT_PATH)) {
             mkdir(self::SAVE_CONTACT_PATH, 0777, true);
         }
 
@@ -78,16 +78,22 @@ class ContactController extends AbstractController
 
         $result = file_put_contents(self::SAVE_CONTACT_PATH . $filename, json_encode($contact, JSON_PRETTY_PRINT));
 
-        if($result === false) {
+        if ($result === false) {
             $response->statusCode = 500;
             $response->content = json_encode(['error' => 'Could not save contact']);
             return $response;
         }
-        
+
+        $date = date('Y-m-d_H-i-s', $now);
+        $responseFilename = $date . "_" . $contact['email'] . ".json";
 
 
-        $response->statusCode = 200;
-        $response->content = json_encode($contact);
+        $response->statusCode = 201;
+        $response->content = json_encode(
+            [
+                'file' => $responseFilename
+            ]
+        );
 
         return $response;
     }
