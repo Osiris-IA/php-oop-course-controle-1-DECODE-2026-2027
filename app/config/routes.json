@@ -19,5 +19,16 @@
     "uri":"/contact/{id}",
     "method":"GET",
     "controller":"GetContactController"
+  },
+  {
+    "uri":"/contact/{id}",
+    "method":"PATCH",
+    "controller":"PatchContactController"
+  },
+  {
+    "uri":"/contact/{id}",
+    "method":"DELETE",
+    "controller":"DeleteContactController"
   }
+
 ]
