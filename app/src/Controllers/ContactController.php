@@ -8,6 +8,8 @@ use Lib\Controllers\AbstractController;
 
 class ContactController extends AbstractController
 {
+    private const string SAVE_CONTACT_PATH = __DIR__ . '/../../var/contacts/';
+
     public function process(Request $request): Response
     {
         $response = new Response();
@@ -67,6 +69,21 @@ class ContactController extends AbstractController
             "dateOfCreation" => $now,
             "dateOfLastUpdate" => $now
         ];
+
+        if(!is_dir(self::SAVE_CONTACT_PATH)) {
+            mkdir(self::SAVE_CONTACT_PATH, 0777, true);
+        }
+
+        $filename = $now . "_" . $contact['email'] . ".json";
+
+        $result = file_put_contents(self::SAVE_CONTACT_PATH . $filename, json_encode($contact, JSON_PRETTY_PRINT));
+
+        if($result === false) {
+            $response->statusCode = 500;
+            $response->content = json_encode(['error' => 'Could not save contact']);
+            return $response;
+        }
+        
 
 
         $response->statusCode = 200;
