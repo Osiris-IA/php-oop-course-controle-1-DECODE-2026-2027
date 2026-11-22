@@ -33,7 +33,7 @@ class PatchContactController extends AbstractController
 
         $filePathContent = file_get_contents($filePath);
         $filePathDecode = json_decode($filePathContent, true, 512, JSON_THROW_ON_ERROR);
-        
+
         $data = json_decode($request->getBody(), true);
 
         if (!is_array($data)) {
@@ -47,6 +47,28 @@ class PatchContactController extends AbstractController
             if (!in_array($key, $allowedKeys)) {
                 $response->statusCode = 400;
                 $response->content = json_encode(['error' => 'Property not allowed: ' . $key]);
+                return $response;
+            }
+        }
+        if ($data === []) {
+            $response->statusCode = 400;
+            $response->content = json_encode(['error' => 'At least one property is required']);
+            return $response;
+        }
+
+        if (array_key_exists('email', $data) && (!is_string($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))) {
+            $response->statusCode = 400;
+            $response->content = json_encode(['error' => 'Invalid email']);
+            return $response;
+        }
+        foreach (['subject', 'message'] as $field) {
+            if (array_key_exists($field, $data) === false) {
+                continue;
+            }
+
+            if (!is_string($data[$field]) || trim($data[$field]) === '') {
+                $response->statusCode = 400;
+                $response->content = json_encode(['error' => 'Invalid ' . $field]);
                 return $response;
             }
         }
