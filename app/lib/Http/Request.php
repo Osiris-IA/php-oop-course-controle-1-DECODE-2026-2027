@@ -2,11 +2,13 @@
 
 namespace Lib\Http;
 
-class Request {
+class Request
+{
     private readonly string $uri;
     private readonly string $method;
     private readonly array $headers;
     private readonly string $body;
+    private readonly string $id;
 
     public function __construct()
     {
@@ -35,7 +37,12 @@ class Request {
     {
         return $this->body;
     }
-
+    public function getId(): string
+    {
+        return $this->id;
+    }
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 }
-
-
