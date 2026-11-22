@@ -2,13 +2,21 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Http\Router;
-use App\Http\Request;
+use Lib\Http\Router;
+use Lib\Http\Request;
 
 $request = new Request();
 
 $router = new Router();
-$router->main($request);
+$response = $router->main($request);
+
+foreach ($response->headers as $header) {
+    header($header);
+}
+
+http_response_code($response->statusCode);
+echo $response->content;
 
 
-?>
+
+
