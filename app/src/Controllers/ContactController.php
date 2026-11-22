@@ -52,17 +52,25 @@ class ContactController extends AbstractController
         }
 
         foreach (['subject', 'message'] as $field) {
-            if(!is_string($data[$field]) || trim($data[$field]) === '') {
+            if (!is_string($data[$field]) || trim($data[$field]) === '') {
                 $response->statusCode = 400;
                 $response->content = json_encode(['error' => 'Invalid ' . $field]);
                 return $response;
             }
-
         }
+
+        $now = time();
+        $contact = [
+            "email" => $data['email'],
+            "subject" => trim($data['subject']),
+            "message" => trim($data['message']),
+            "dateOfCreation" => $now,
+            "dateOfLastUpdate" => $now
+        ];
 
 
         $response->statusCode = 200;
-        $response->content = print_r($data, true);
+        $response->content = json_encode($contact);
 
         return $response;
     }
