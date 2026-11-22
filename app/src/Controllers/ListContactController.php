@@ -37,7 +37,6 @@ class ListContactController extends AbstractController
             $currentContacts[] = $fileContactDecode;
         }
 
-
         $response->statusCode = 200;
         $response->content = json_encode($currentContacts);
 
