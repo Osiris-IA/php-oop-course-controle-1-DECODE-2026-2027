@@ -45,6 +45,21 @@ class ContactController extends AbstractController
             }
         }
 
+        if (!is_string($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $response->statusCode = 400;
+            $response->content = json_encode(['error' => 'Invalid email']);
+            return $response;
+        }
+
+        foreach (['subject', 'message'] as $field) {
+            if(!is_string($data[$field]) || trim($data[$field]) === '') {
+                $response->statusCode = 400;
+                $response->content = json_encode(['error' => 'Invalid ' . $field]);
+                return $response;
+            }
+
+        }
+
 
         $response->statusCode = 200;
         $response->content = print_r($data, true);
