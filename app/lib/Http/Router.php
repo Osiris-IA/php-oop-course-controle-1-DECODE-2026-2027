@@ -21,8 +21,9 @@ class Router
 
         foreach ($routes as $route) {
             $this->validateConfig($route);
+            $params = $this->checkUri($request, $route['uri']);
 
-            if ($this->checkUri($request, $route['uri']) === false) {
+            if ($params === false) {
                 continue;
             }
             $uriFoundFlag = true;
@@ -73,9 +74,26 @@ class Router
         }
     }
 
-    private function checkUri(Request $request, string $uri): bool
+    private function checkUri(Request $request, string $uri): array|false
     {
-        return $request->getUri() === $uri;
+        $routeParts   = explode('/', $uri);
+        $requestParts = explode('/', $request->getUri());
+
+        if (count($routeParts) !== count($requestParts)) {
+            return false;
+        }
+
+        $params = [];
+        foreach ($routeParts as $index => $routePart) {
+            if (str_starts_with($routePart, '{')) {
+                $params[trim($routePart, '{}')] = $requestParts[$index];
+                continue;
+            }
+            if ($routePart !== $requestParts[$index]) {
+                return false;
+            }
+        }
+        return $params;
     }
 
     private function checkMethod(Request $request, string $method): bool
