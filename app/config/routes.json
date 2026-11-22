@@ -9,5 +9,11 @@
     "method":"POST",
     "controller":"ContactController"
 
+  },
+  {
+    "uri":"/contact",
+    "method":"GET",
+    "controller":"ListContactController"
+
   }
 ]
