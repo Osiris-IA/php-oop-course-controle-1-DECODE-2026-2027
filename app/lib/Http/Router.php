@@ -32,6 +32,9 @@ class Router
                 continue;
             }
             $methodFoundFlag = true;
+            if(array_key_exists('id', $params)) {
+                $request->setId($params['id']);
+            }
 
             try {
                 $controllerInstance = $this->getValidControllerInstance($route['controller']);
