@@ -9,5 +9,4 @@ abstract class AbstractController {
     public abstract function process(Request $request): Response;
 }
 
-?>
 

@@ -10,7 +10,13 @@ $request = new Request();
 $router = new Router();
 $response = $router->main($request);
 
+foreach ($response->headers as $header) {
+    header($header);
+}
+
+http_response_code($response->statusCode);
 echo $response->content;
 
 
-?>
+
+
