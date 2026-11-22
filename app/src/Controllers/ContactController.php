@@ -23,23 +23,43 @@ class ContactController extends AbstractController
         }
         $data = json_decode($request->getBody(), true);
 
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             $response->statusCode = 400;
             $response->content = json_encode(['error' => 'Invalid JSON body']);
             return $response;
         }
+        $allowedKeys = ['email', 'subject', 'message'];
+
+        foreach ($data as $key => $value) {
+            if (!in_array($key, $allowedKeys)) {
+                $response->statusCode = 400;
+                $response->content = json_encode(['error' => 'Property not allowed: ' . $key]);
+                return $response;
+            }
+        }
+        foreach ($allowedKeys as $allowedKey) {
+            if (!array_key_exists($allowedKey, $data)) {
+                $response->statusCode = 400;
+                $response->content = json_encode(['error' => 'Missing property: ' . $allowedKey]);
+                return $response;
+            }
+        }
+
+
         $response->statusCode = 200;
         $response->content = print_r($data, true);
 
         return $response;
     }
 
+
+
     // private function decodeBody(string $data): array {
-        
+
     //     return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
     // }
 
 
 
-    
+
 }
